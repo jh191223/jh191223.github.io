@@ -64,5 +64,4 @@ if __name__ == "__main__":
     root = tk.Tk()
     app = WiFiQRApp(root)
     root.mainloop()
-# $ python -m PyInstaller --onefile --windowed search.py
-# $ python -m PyInstaller --icon="hotdeal.png" --onefile --windowed search.py
+
