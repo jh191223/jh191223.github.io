@@ -1,0 +1,68 @@
+import tkinter as tk
+from tkinter import messagebox
+import qrcode
+from PIL import Image, ImageTk
+
+class WiFiQRApp:
+    def __init__(self, root):
+        self.root = root
+        self.root.title("WiFi QR 코드 생성기")
+        self.root.geometry("400x500")
+        
+        # SSID 입력
+        tk.Label(root, text="SSID 입력:").pack(pady=5)
+        self.ssid_entry = tk.Entry(root, width=30)
+        self.ssid_entry.pack(pady=5)
+
+        # 비밀번호 입력
+        tk.Label(root, text="비밀번호 입력:").pack(pady=5)
+        self.password_entry = tk.Entry(root, width=30, show="*")
+        self.password_entry.pack(pady=5)
+
+        # 보안 방식 선택
+        tk.Label(root, text="보안 방식 선택 (WPA/WEP/OPEN):").pack(pady=5)
+        self.security_var = tk.StringVar(value="WPA")
+        self.security_menu = tk.OptionMenu(root, self.security_var, "WPA", "WEP", "OPEN")
+        self.security_menu.pack(pady=5)
+
+        # QR 코드 생성 버튼
+        tk.Button(root, text="QR 코드 생성", command=self.generate_qr).pack(pady=10)
+
+        # QR 코드 표시할 라벨
+        self.qr_label = tk.Label(root)
+        self.qr_label.pack(pady=10)
+
+    def generate_qr(self):
+        ssid = self.ssid_entry.get()
+        password = self.password_entry.get()
+        security = self.security_var.get()
+
+        if not ssid:
+            messagebox.showerror("오류", "SSID를 입력하세요!")
+            return
+        
+        if security != "OPEN" and not password:
+            messagebox.showerror("오류", "비밀번호를 입력하세요!")
+            return
+
+        # WiFi QR 코드 데이터 생성
+        qr_data = f"WIFI:S:{ssid};T:{security};P:{password};;"
+        qr_img = qrcode.make(qr_data)
+        qr_img.save("wifi_qr.png")  # 파일 저장
+
+        # QR 코드 표시
+        qr_img = Image.open("wifi_qr.png")
+        qr_img = qr_img.resize((200, 200))  # 크기 조정
+        qr_img = ImageTk.PhotoImage(qr_img)
+        self.qr_label.config(image=qr_img)
+        self.qr_label.image = qr_img  # 가비지 컬렉션 방지
+
+        messagebox.showinfo("성공", "QR 코드가 생성되었습니다!")
+
+# Tkinter 실행
+if __name__ == "__main__":
+    root = tk.Tk()
+    app = WiFiQRApp(root)
+    root.mainloop()
+# $ python -m PyInstaller --onefile --windowed search.py
+# $ python -m PyInstaller --icon="hotdeal.png" --onefile --windowed search.py
