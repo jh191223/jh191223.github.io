@@ -139,7 +139,7 @@ def main():
         # 충돌 체크
         if player.rect.colliderect(enemy.rect):  # player_rect와 enemy_rect 비교
             print("충돌")
-            pygame.quit()  # 게임 종료
+            pygame.quit()  # 게임 종료tt
             sys.exit()
 
         pygame.display.update()
@@ -152,3 +152,4 @@ if __name__ == '__main__':
 ## 기준점 변동에따른 세밀도 분석 추가 프로젝트 => line 77
 ## 매크로를 껐다 켰다 하면서 하는 경우 macro 분석이 어렵지 않을까
 ## 일정 시간에 따라 난이도 변경 및 배경 변경
+## tkInter를 활용한 매크로 버튼 GUI를 따로 보이게 만들기 
