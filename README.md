@@ -10,18 +10,18 @@
 ## 🚀 Projects 
 ### 🔹 Ip 주소 및 컴퓨터 정보 탈취
 > 🔹 **설명:** Automouse를 활용한 컴퓨터 Ip 등 정보 탈취
-> 🔹 **사용 기술:** C, Python, JavaScript  
+> 🔹 **사용 기술:** Python, JavaScript  
 > 🔹https://github.com/jh191223/jh191223.github.io/tree/main/Ip_hacking
 
-### 🔹 [프로젝트2](GitHub링크)
-> 🔹 **설명:** 웹 보안과 관련된 프로젝트  
-> 🔹 **사용 기술:** HTML, JavaScript, 보안 분석 툴  
+### 🔹 점프게임
+> 🔹 **설명:** "Pygame으로 제작한 매크로 감지 기능이 포함된 점프 게임"
+> 🔹 **사용 기술:** Python
+> 🔹 https://github.com/jh191223/jh191223.github.io/tree/main/%EC%A0%90%ED%94%84%EA%B2%8C%EC%9E%84
 
 ## 🛠️ Tech Stack
-![C](https://img.shields.io/badge/C-A8B9CC?style=flat-square&logo=c&logoColor=white)
 ![Python](https://img.shields.io/badge/Python-3776AB?style=flat-square&logo=python&logoColor=white)
-![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=flat-square&logo=javascript&logoColor=black)
 
 ## 📞 Contact
-[![GitHub](https://img.shields.io/badge/GitHub-181717?style=flat-square&logo=github&logoColor=white)](https://github.com/YourGitHubID)
-[![Email](https://img.shields.io/badge/Email-DA2C43?style=flat-square&logo=gmail&logoColor=white)](mailto:your.email@example.com)
+[![GitHub](https://img.shields.io/badge/GitHub-181717?style=flat-square&logo=github&logoColor=white)](https://github.com/jh191223)
+[![Email](https://img.shields.io/badge/Email-DA2C43?style=flat-square&logo=gmail&logoColor=white)](mailto:dolchi37@naver.com)
+
