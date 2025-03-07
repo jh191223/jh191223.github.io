@@ -7,8 +7,8 @@
 - 🔭 현재 배우고 있는 기술: **웹 보안, Python Project, **
 - 🎯 목표: 보안 전문가 & 개발자
 
-## 🚀 Projects
-### 🔹 [프로젝트1](GitHub링크)
+## 🚀 Projects (Ip 주소 및 컴퓨터 정보 탈취
+### 🔹 https://github.com/jh191223/jh191223.github.io/tree/main/Ip_hacking
 > 🔹 **설명:** 프로젝트 간단한 개요  
 > 🔹 **사용 기술:** C, Python, JavaScript  
 > 🔹 [📌 코드 보기](GitHub 링크)
