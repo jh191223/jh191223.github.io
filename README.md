@@ -1,4 +1,4 @@
-# 📜 김동우 포트폴리오
+[[[# 📜 김동우 포트폴리오
 
 > 김동우(Dongwoo Kim) - kimphysicsman 포트폴리오
 
@@ -143,3 +143,4 @@
 - 유튜브 :<a href="https://www.youtube.com/channel/UCdnXRtn_xnRWzZxUGY0yyWg">
   <img src="https://user-images.githubusercontent.com/1569988/159397141-21463bc2-2acf-416b-aa15-235664556f34.png" height="24px" style="margin-top: 10px" />
   </a>           관리
+](https://velog.io/@pjy707099/Github-%EA%B0%84%EC%A7%80%EB%82%98%EA%B2%8C-%ED%94%84%EB%A1%9C%ED%95%84-%EA%BE%B8%EB%AF%B8%EA%B8%B0)https://velog.io/@pjy707099/Github-%EA%B0%84%EC%A7%80%EB%82%98%EA%B2%8C-%ED%94%84%EB%A1%9C%ED%95%84-%EA%BE%B8%EB%AF%B8%EA%B8%B0](https://velog.io/@pjy707099/Github-%EA%B0%84%EC%A7%80%EB%82%98%EA%B2%8C-%ED%94%84%EB%A1%9C%ED%95%84-%EA%BE%B8%EB%AF%B8%EA%B8%B0)  ](https://velog.io/@pjy707099/Github-%EA%B0%84%EC%A7%80%EB%82%98%EA%B2%8C-%ED%94%84%EB%A1%9C%ED%95%84-%EA%BE%B8%EB%AF%B8%EA%B8%B0)
