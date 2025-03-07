@@ -1,10 +1,10 @@
-# 🚀 [Your Name]의 GitHub 포트폴리오
+# 🚀 Jaehwan의 GitHub 정보보안 및 파이썬 포트폴리오
 
 ![header](https://capsule-render.vercel.app/api?type=wave&color=auto&height=200&section=header&text=Welcome!&fontSize=50)
 
 ## 👋 About Me
-- 🌱 관심 분야: **Web Security, C, JavaScript**
-- 🔭 현재 배우고 있는 기술: **웹 보안, XSS, 시스템 프로그래밍**
+- 🌱 관심 분야: **Web Security, python,Web Hacking, System Hacking**
+- 🔭 현재 배우고 있는 기술: **웹 보안, Python Project, **
 - 🎯 목표: 보안 전문가 & 개발자
 
 ## 🚀 Projects
