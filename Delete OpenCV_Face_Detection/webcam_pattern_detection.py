@@ -1,21 +1,14 @@
-# Copyright (C) 2022 The Qt Company Ltd.
-# SPDX-License-Identifier: LicenseRef-Qt-Commercial OR BSD-3-Clause
-from __future__ import annotations
-
 import os
 import sys
 import time
-
 import cv2
+import winsound
 from PySide6.QtCore import Qt, QThread, Signal, Slot
 from PySide6.QtGui import QAction, QImage, QKeySequence, QPixmap
 from PySide6.QtWidgets import (QApplication, QComboBox, QGroupBox,
                                QHBoxLayout, QLabel, QMainWindow, QPushButton,
-                               QSizePolicy, QVBoxLayout, QWidget)
+                               QSizePolicy, QVBoxLayout, QWidget, QSpinBox)
 
-
-"""This example uses the video from a  webcam to apply pattern
-detection from the OpenCV module. e.g.: face, eyes, body, etc."""
 class Thread(QThread):
     updateFrame = Signal(QImage)
 
@@ -23,18 +16,18 @@ class Thread(QThread):
         QThread.__init__(self, parent)
         self.trained_file = None
         self.status = True
-        self.cap = True
-        self.is_recording = False  # 녹화 상태 추가
-        self.video_writer = None  # VideoWriter 객체 추가
+        self.cap = None
+        self.alarm_time = 5  # 기본 알람 시간 (초)
+        self.elapsed_time = 0  # 경과 시간
+        self.alarm_triggered = False  # 알람이 울렸는지 여부를 추적
+        self.person_detected = False  # 사람이 감지되었는지 여부를 추적
 
     def set_file(self, fname):
-        # The data comes with the 'opencv-python' module
         self.trained_file = os.path.join(cv2.data.haarcascades, fname)
 
     def start_recording(self, filename):
         """녹화 시작"""
         self.is_recording = True
-        # 비디오 캡처의 프레임 크기 및 코덱 설정
         fourcc = cv2.VideoWriter_fourcc(*'XVID')  # 'XVID' 코덱 사용
         self.video_writer = cv2.VideoWriter(filename, fourcc, 20.0, (640, 480))
 
@@ -44,61 +37,81 @@ class Thread(QThread):
         if self.video_writer:
             self.video_writer.release()
 
+    def set_alarm_time(self, time_seconds):
+        """알람 시간을 설정하는 메서드"""
+        self.alarm_time = time_seconds
+        self.alarm_triggered = False  # 알람 시간 변경 시 알람 상태 초기화
+
     def run(self):
-        self.cap = cv2.VideoCapture(0)
+        self.cap = cv2.VideoCapture(0, cv2.CAP_DSHOW)
         while self.status:
             cascade = cv2.CascadeClassifier(self.trained_file)
             ret, frame = self.cap.read()
             if not ret:
                 continue
 
-            # Reading frame in gray scale to process the pattern
             gray_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-
             detections = cascade.detectMultiScale(gray_frame, scaleFactor=1.1,
                                                   minNeighbors=5, minSize=(30, 30))
 
-            # Drawing green rectangle around the pattern
+            if len(detections) > 0:
+                self.person_detected = True  # 사람이 감지됨
+            else:
+                self.person_detected = False  # 사람이 감지되지 않음
+
+            # 사람이 감지되었을 때만 경과 시간 증가
+            if self.person_detected:
+                self.elapsed_time += 1  # 1초씩 증가한다고 가정
+
+                # 알람 시간에 도달하면 알람 울리기
+                if self.elapsed_time >= self.alarm_time and not self.alarm_triggered:
+                    self.trigger_alarm()
+                    self.alarm_triggered = True  # 알람이 울렸으므로 알람 상태 변경
+                    self.elapsed_time = 0  # 알람 후 시간 초기화
+            else:
+                # 사람이 감지되지 않으면 경과 시간 초기화
+                self.elapsed_time = 0
+                self.alarm_triggered = False  # 알람 초기화
+
+            # 영상 처리
             for (x, y, w, h) in detections:
                 pos_ori = (x, y)
                 pos_end = (x + w, y + h)
                 color = (0, 255, 0)
                 cv2.rectangle(frame, pos_ori, pos_end, color, 2)
 
-            # If recording, write the frame to the video file
-            if self.is_recording and self.video_writer:
-                self.video_writer.write(frame)
-
-            # Reading the image in RGB to display it
             color_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-
-            # Creating and scaling QImage
             h, w, ch = color_frame.shape
             img = QImage(color_frame.data, w, h, ch * w, QImage.Format.Format_RGB888)
             scaled_img = img.scaled(640, 480, Qt.AspectRatioMode.KeepAspectRatio)
 
-            # Emit signal
             self.updateFrame.emit(scaled_img)
         sys.exit(-1)
+
+    def trigger_alarm(self):
+        """알람을 울리는 메서드"""
+        print("알람!! 사람이 감지되었습니다.")
+        winsound.Beep(1000, 1000)  # 1000Hz 주파수, 1초 동안 울리기
+
 
 class Window(QMainWindow):
     def __init__(self):
         super().__init__()
-        # Title and dimensions
         self.setWindowTitle("Patterns detection with Video Recording")
         self.setGeometry(0, 0, 800, 500)
 
-        # Main menu bar
-        self.menu = self.menuBar()
-        self.menu_file = self.menu.addMenu("File")
-        exit = QAction("Exit", self, triggered=qApp.quit)  # noqa: F821
-        self.menu_file.addAction(exit)
+        # 알람 시간 설정 UI 추가
+        self.alarm_time_label = QLabel("알람 시간 (초):", self)
+        self.alarm_time_label.setFixedSize(100, 30)
+        self.alarm_time_spinbox = QSpinBox(self)
+        self.alarm_time_spinbox.setRange(1, 60)  # 1초에서 60초까지 설정
+        self.alarm_time_spinbox.setValue(5)  # 기본값 5초
+        self.alarm_time_spinbox.setFixedSize(80, 30)
 
-        self.menu_about = self.menu.addMenu("&About")
-        about = QAction("About Qt", self,
-                        shortcut=QKeySequence(QKeySequence.StandardKey.HelpContents),
-                        triggered=qApp.aboutQt)  # noqa: F821
-        self.menu_about.addAction(about)
+        # 알람 시간 UI 배치
+        alarm_layout = QHBoxLayout()
+        alarm_layout.addWidget(self.alarm_time_label)
+        alarm_layout.addWidget(self.alarm_time_spinbox)
 
         # Create a label for the display camera
         self.label = QLabel(self)
@@ -145,6 +158,7 @@ class Window(QMainWindow):
         # Main layout
         layout = QVBoxLayout()
         layout.addWidget(self.label)
+        layout.addLayout(alarm_layout)
         layout.addLayout(right_layout)
 
         # Central widget
@@ -161,12 +175,15 @@ class Window(QMainWindow):
         self.button3.setEnabled(True)
         self.button4.setEnabled(False)
         self.combobox.currentTextChanged.connect(self.set_model)
+        self.alarm_time_spinbox.valueChanged.connect(self.update_alarm_time)
 
-    @Slot()
+    def update_alarm_time(self):
+        """알람 시간 변경 시 호출되는 슬롯"""
+        self.th.set_alarm_time(self.alarm_time_spinbox.value())
+
     def set_model(self, text):
         self.th.set_file(text)
 
-    @Slot()
     def kill_thread(self):
         print("Finishing...")
         self.button2.setEnabled(False)
@@ -175,10 +192,8 @@ class Window(QMainWindow):
         cv2.destroyAllWindows()
         self.status = False
         self.th.terminate()
-        # Give time for the thread to finish
         time.sleep(1)
 
-    @Slot()
     def start(self):
         print("Starting...")
         self.button2.setEnabled(True)
@@ -186,22 +201,18 @@ class Window(QMainWindow):
         self.th.set_file(self.combobox.currentText())
         self.th.start()
 
-    @Slot()
     def start_recording(self):
-        print("Recording started...")
+        print(f"알람 시간: {self.th.alarm_time}초")
         self.button3.setEnabled(False)
         self.button4.setEnabled(True)
-        # 지정된 폴더에 녹화 파일 저장
-        self.th.start_recording(r'C:\Users\dolch\Desktop\네클캠\mini_project\OpenCV_Face_Detection\녹화\output.avi')  # 녹화 파일명 지정
+        self.th.start_recording(r'C:\Users\dolch\Desktop\네클캠\mini_project\OpenCV_Face_Detection\녹화\output.avi')
 
-    @Slot()
     def stop_recording(self):
         print("Recording stopped...")
         self.button3.setEnabled(True)
         self.button4.setEnabled(False)
         self.th.stop_recording()
 
-    @Slot(QImage)
     def setImage(self, image):
         self.label.setPixmap(QPixmap.fromImage(image))
 
